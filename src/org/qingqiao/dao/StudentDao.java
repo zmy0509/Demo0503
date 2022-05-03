@@ -15,7 +15,7 @@ import java.util.List;
 public class StudentDao {
 
     // 查询所有学生数据
-    public List<Student> queryAll(){
+    public List<Student> queryAll() {
         ArrayList<Student> list = new ArrayList<>();
         try {
             // 使用工具类获取连接
@@ -27,9 +27,9 @@ public class StudentDao {
             // 执行sql语句
             ResultSet rs = ps.executeQuery();
             // 处理结果集
-            while(rs.next()){
-                Clazz clazz = new Clazz(rs.getInt(7),rs.getString(8));
-                Student student = new Student(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getString(5),rs.getDouble(6),clazz);
+            while (rs.next()) {
+                Clazz clazz = new Clazz(rs.getInt(7), rs.getString(8));
+                Student student = new Student(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getDouble(6), clazz);
                 list.add(student);
             }
         } catch (SQLException throwables) {
@@ -39,7 +39,7 @@ public class StudentDao {
     }
 
     // 查询所有班级数据
-    public List<Clazz> queryAllClazz(){
+    public List<Clazz> queryAllClazz() {
         ArrayList<Clazz> list = new ArrayList<>();
         try {
             // 使用工具类获取连接
@@ -51,8 +51,8 @@ public class StudentDao {
             // 执行sql语句
             ResultSet rs = ps.executeQuery();
             // 处理结果集
-            while(rs.next()){
-                Clazz clazz = new Clazz(rs.getInt(1),rs.getString(2));
+            while (rs.next()) {
+                Clazz clazz = new Clazz(rs.getInt(1), rs.getString(2));
                 list.add(clazz);
             }
         } catch (SQLException throwables) {
@@ -62,28 +62,28 @@ public class StudentDao {
     }
 
     // 添加数据
-    public int insertStudent(Student s){
+    public int insertStudent(Student s) {
         int i = 0;
         try {
             Connection conn = JDBCUtil.getConn();
             String sql = "insert into student(name,sex,age,address,score,cid) values(?,?,?,?,?,?)";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1,s.getName());
-            ps.setString(2,s.getSex());
-            ps.setInt(3,s.getAge());
-            ps.setString(4,s.getAddress());
-            ps.setDouble(5,s.getScore());
-            ps.setInt(6,s.getClazz().getId());
+            ps.setString(1, s.getName());
+            ps.setString(2, s.getSex());
+            ps.setInt(3, s.getAge());
+            ps.setString(4, s.getAddress());
+            ps.setDouble(5, s.getScore());
+            ps.setInt(6, s.getClazz().getId());
 
             i = ps.executeUpdate();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return i;
     }
 
     // 根据id查询数据
-    public Student queryStudentById(int id){
+    public Student queryStudentById(int id) {
         Student student = null;
         try {
             // 使用工具类获取连接
@@ -92,13 +92,13 @@ public class StudentDao {
             String sql = "select s.*,c.name cname from student s left join clazz c on s.cid = c.id where s.id = ?";
             // 创建预编译对象
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             // 执行sql语句
             ResultSet rs = ps.executeQuery();
             // 处理结果集
-            while(rs.next()){
-                Clazz clazz = new Clazz(rs.getInt(7),rs.getString(8));
-                student = new Student(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getString(5),rs.getDouble(6),clazz);
+            while (rs.next()) {
+                Clazz clazz = new Clazz(rs.getInt(7), rs.getString(8));
+                student = new Student(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5), rs.getDouble(6), clazz);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -107,21 +107,36 @@ public class StudentDao {
     }
 
     // 修改数据
-    public int updateStudent(Student s){
+    public int updateStudent(Student s) {
         int i = 0;
         try {
             Connection conn = JDBCUtil.getConn();
             String sql = "update student set name=?,sex=?,age=?,address=?,score=?,cid=? where id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1,s.getName());
-            ps.setString(2,s.getSex());
-            ps.setInt(3,s.getAge());
-            ps.setString(4,s.getAddress());
-            ps.setDouble(5,s.getScore());
-            ps.setInt(6,s.getClazz().getId());
-            ps.setInt(7,s.getId());
+            ps.setString(1, s.getName());
+            ps.setString(2, s.getSex());
+            ps.setInt(3, s.getAge());
+            ps.setString(4, s.getAddress());
+            ps.setDouble(5, s.getScore());
+            ps.setInt(6, s.getClazz().getId());
+            ps.setInt(7, s.getId());
             i = ps.executeUpdate();
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return i;
+    }
+
+    // 删除数据
+    public int deleteStudent(int id) {
+        int i = 0;
+        try {
+            Connection conn = JDBCUtil.getConn();
+            String sql = "delete from student where id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            i = ps.executeUpdate();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return i;

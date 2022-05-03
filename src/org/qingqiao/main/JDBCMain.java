@@ -16,7 +16,8 @@ public class JDBCMain {
     public static void main(String[] args) {
         // insert();
         // update();
-        // queryall();
+        delete();
+        queryall();
     }
 
     private static void queryall(){
@@ -74,6 +75,15 @@ public class JDBCMain {
         int i = studentDao.updateStudent(newStudent);
         if(i > 0){
             System.out.println("修改成功");
+        }
+    }
+
+    private static void delete(){
+        System.out.println("请输入学生编号");
+        int id = sc.nextInt();
+        int i = studentDao.deleteStudent(id);
+        if(i > 0){
+            System.out.println("删除成功");
         }
     }
 }
